@@ -28,12 +28,13 @@ int main(int argc, const char **argv) {
   bool gameOn = false;
   int frames = 0;
 
-  int obsX = screenWidth;
+  double obsX = screenWidth;
   int obsY = groundY;
 
   int prevScore = 0;
+  double obsVel = 10;
   while (!WindowShouldClose()) {
-    if (!gameOn && IsKeyDown(KEY_SPACE)) gameOn = true;
+    if (!gameOn && IsKeyPressed(KEY_SPACE)) gameOn = true;
     if (jumpDb == 0 && IsKeyDown(KEY_SPACE) && dinoY == groundY) {
       jumpDb = 25;
       dinoY -= 500;
@@ -53,18 +54,21 @@ int main(int argc, const char **argv) {
     ClearBackground(LIGHTGRAY);
 
     if (gameOn) {
-      DrawText(TextFormat("Score: %d| jumpDb: %d | Obstacle speed: %.2d", frames,jumpDb, round(20 * (( (double) frames / 1000) + 1))), 0, 0, 30, BLACK);
+      DrawText(TextFormat("Score: %d | jumpDb: %d | Obstacle speed: %.2f | FPS: %d", frames,jumpDb, obsVel, GetFPS()), 0, 0, 30, BLACK);
       DrawRectangle(100, dinoY, 100, 100, DARKGREEN);
       DrawRectangle(0, screenHeight * 0.75, screenWidth, screenHeight / 4, BROWN);
      
       // Obstacle
 
       DrawRectangle(obsX, obsY, 100, 100, RED);
-      obsX -= round(20 * (((double)frames / 1000) + 1));
+      obsX -=  obsVel;
+
+
       if (obsX < 0 - 100) obsX = screenWidth;
       if (100 + 100 > obsX && 100 < obsX + 100 
       &&  dinoY + 100 > obsY && dinoY < obsY + 100) {gameOn = false; prevScore = frames;frames = 0;};
-    
+ 
+      obsVel = 10 + (double) frames / 100;
     frames++;
     } else {
       if (prevScore == 0) DrawText("Press Space to begin", screenWidth / 2, screenHeight / 2, 50, BLACK);
