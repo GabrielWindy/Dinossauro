@@ -1,7 +1,10 @@
-#include <math.h>
 #include <raylib.h>
 #include <stdbool.h>
 
+bool IsPlrJumping()
+{
+  return IsKeyDown(KEY_SPACE) || IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+}
 
 int main(int argc, const char **argv) {
   int screenWidth, screenHeight;
@@ -17,6 +20,7 @@ int main(int argc, const char **argv) {
   }
 
   InitWindow(screenWidth, screenHeight, "Dinossauro");
+  InitAudioDevice();
 
   int groundY = (screenHeight * 0.75) - 100;
   int dinoY = groundY;
@@ -33,9 +37,16 @@ int main(int argc, const char **argv) {
 
   int prevScore = 0;
   double obsVel = 10;
+  
+  // Music
+  Music music = LoadMusicStream("./assets/music.mp3");
+  
+  Sound jumpSfx = LoadSound("./assets/jump.mp3");
+  SetSoundVolume(jumpSfx, 1.2f);
   while (!WindowShouldClose()) {
-    if (!gameOn && IsKeyPressed(KEY_SPACE)) gameOn = true;
-    if (jumpDb == 0 && IsKeyDown(KEY_SPACE) && dinoY == groundY) {
+    if (!gameOn && IsPlrJumping()) {gameOn = true; PlayMusicStream(music);};
+    if (jumpDb == 0 && IsPlrJumping() && dinoY == groundY) {
+      PlaySound(jumpSfx);
       jumpDb = 25;
       dinoY -= 500;
     }
@@ -66,7 +77,7 @@ int main(int argc, const char **argv) {
 
       if (obsX < 0 - 100) obsX = screenWidth;
       if (100 + 100 > obsX && 100 < obsX + 100 
-      &&  dinoY + 100 > obsY && dinoY < obsY + 100) {gameOn = false; prevScore = frames;frames = 0;};
+      &&  dinoY + 100 > obsY && dinoY < obsY + 100) {gameOn = false; prevScore = frames;frames = 0; StopMusicStream(music);};
  
       obsVel = 10 + (double) frames / 100;
     frames++;

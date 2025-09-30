@@ -5,6 +5,7 @@ OUTPUT = ./dino
 
 build:
 	make ./dino
+	cd ./
 	./dino
 ./dino: $(SRCS)
 	$(CC) $(SRCS) $(CFLAGS) -o $(OUTPUT)

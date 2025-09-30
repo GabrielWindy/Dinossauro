@@ -1,1 +1,15 @@
 dino
+# CMake generated files and directories
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+Makefile
+*.cbp # CodeBlocks project files
+*.depend # Dependency files
+*.layout # CodeBlocks layout files
+*.mk # Makefiles
+*.vcxproj* # Visual Studio project files
+*.sln # Visual Studio solution files
+.vs/ # Visual Studio cache/options directory
